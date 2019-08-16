@@ -1,5 +1,8 @@
 package com.soft.webapp.service.user.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.soft.webapp.entity.SysUser;
 import com.soft.webapp.mapper.user.ISysUserMapper;
 import com.soft.webapp.service.user.ISysUserService;
@@ -19,7 +22,10 @@ public class SysUserServiceImpl implements ISysUserService {
 	@Autowired
 	private ISysUserMapper sysUserMapper;
 
-	public List<SysUser> list(){
-		return sysUserMapper.selectList(null);
+	public IPage<SysUser> list(Page<SysUser> page){
+		QueryWrapper<SysUser> queryWrapper = new QueryWrapper<>();
+		queryWrapper.orderByDesc("id");
+
+		return sysUserMapper.selectPage(page,queryWrapper);
 	}
 }

@@ -1,5 +1,7 @@
 package com.soft.webapp.service.user;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.soft.webapp.entity.SysUser;
 
 import java.util.List;
@@ -10,5 +12,5 @@ import java.util.List;
  * @ Date       ：Created in 10:43 2019/8/16
  */
 public interface ISysUserService {
-	public List<SysUser> list();
+	public IPage<SysUser> list(Page<SysUser> page);
 }

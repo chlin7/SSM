@@ -2,8 +2,10 @@ package com.soft.webapp.framework.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.soft.webapp.framework.constants.PageCons;
+import com.soft.webapp.framework.responses.ResponseResult;
 import com.soft.webapp.framework.utils.TypeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,14 +41,61 @@ public class BaseController {
 	protected <T> Page<T> getPage(boolean openSort) {
 		int index = 1;
 		// 页数
-		Integer cursor = TypeUtils.castToInt(request.getParameter(PageCons.PAGE_PAGE), index);
+		Integer cursor = TypeUtils.castToInt(request.getParameter(PageCons.PAGE_CURRENT), index);
 		// 分页大小
-		Integer limit = TypeUtils.castToInt(request.getParameter(PageCons.PAGE_ROWS), PageCons.DEFAULT_LIMIT);
+		Integer limit = TypeUtils.castToInt(request.getParameter(PageCons.PAGE_SIZE), PageCons.DEFAULT_LIMIT);
 		// 是否查询分页
-		Boolean searchCount = TypeUtils.castToBoolean(request.getParameter(PageCons.SEARCH_COUNT), true);
+		Boolean searchCount = TypeUtils.castToBoolean(request.getParameter(PageCons.SEARCH_TOTAL), true);
 		limit = limit > PageCons.MAX_LIMIT ? PageCons.MAX_LIMIT : limit;
 		Page<T> page = new Page<>(cursor, limit, searchCount);
 		return page;
+	}
+
+	/**
+	 *
+	 * -------------------返回结果统一格式------------------------------
+	 *
+	 */
+
+	/**
+	 * 成功返回
+	 *
+	 * @param object
+	 * @return
+	 */
+	public <T> ResponseResult<T> success(T object) {
+		return ResponseResult.<T>success(response, object);
+	}
+
+	/**
+	 * 成功返回
+	 *
+	 * @return
+	 */
+	public ResponseResult<Void> success() {
+		return success(HttpStatus.OK);
+	}
+
+	/**
+	 * 成功返回
+	 *
+	 * @param status
+	 * @param object
+	 * @return
+	 */
+	public <T> ResponseResult<T> success(HttpStatus status, T object) {
+		return ResponseResult.<T>success(response, status, object);
+	}
+
+
+	/**
+	 * 成功返回
+	 *
+	 * @param status
+	 * @return
+	 */
+	public ResponseResult<Void> success(HttpStatus status) {
+		return ResponseResult.<Void>success(response, status);
 	}
 
 }
