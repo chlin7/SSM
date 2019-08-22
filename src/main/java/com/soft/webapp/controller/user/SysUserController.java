@@ -1,5 +1,6 @@
 package com.soft.webapp.controller.user;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.soft.webapp.entity.SysUser;
@@ -29,7 +30,9 @@ public class SysUserController extends BaseController {
 
 		Page<SysUser> page = this.getPage();
 
-		IPage<SysUser> list = sysUserService.list(page);
+		QueryWrapper<SysUser> queryWrapper = this.getSort();
+
+		IPage<SysUser> list = sysUserService.list(page,queryWrapper);
 
 		return success(list);
 	}

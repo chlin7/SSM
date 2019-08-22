@@ -17,7 +17,6 @@ import java.util.Objects;
 /**
  * Request 请求工具类
  *
- * @author Caratacus
  */
 @SuppressWarnings("ALL")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)

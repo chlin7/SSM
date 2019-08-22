@@ -5,7 +5,6 @@ import lombok.*;
 /**
  * 业务异常类
  *
- * @author Caratacus
  */
 @Getter
 @ToString

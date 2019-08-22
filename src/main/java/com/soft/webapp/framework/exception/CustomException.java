@@ -5,7 +5,6 @@ package com.soft.webapp.framework.exception;
  * Crown异常类
  * </p>
  *
- * @author Caratacus
  */
 public class CustomException extends RuntimeException {
 

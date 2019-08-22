@@ -1,8 +1,10 @@
 package com.soft.webapp.framework.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.soft.webapp.framework.constants.PageCons;
 import com.soft.webapp.framework.responses.ResponseResult;
+import com.soft.webapp.framework.utils.AntiSQLFilter;
 import com.soft.webapp.framework.utils.TypeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,19 +28,9 @@ public class BaseController {
 	/**
 	 * 获取分页对象
 	 *
-	 * @return
+	 * @return page
 	 */
 	protected <T> Page<T> getPage() {
-		return getPage(false);
-	}
-
-	/**
-	 * 获取分页对象
-	 *
-	 * @param openSort
-	 * @return
-	 */
-	protected <T> Page<T> getPage(boolean openSort) {
 		int index = 1;
 		// 页数
 		Integer cursor = TypeUtils.castToInt(request.getParameter(PageCons.PAGE_CURRENT), index);
@@ -48,7 +40,36 @@ public class BaseController {
 		Boolean searchCount = TypeUtils.castToBoolean(request.getParameter(PageCons.SEARCH_TOTAL), true);
 		limit = limit > PageCons.MAX_LIMIT ? PageCons.MAX_LIMIT : limit;
 		Page<T> page = new Page<>(cursor, limit, searchCount);
+
 		return page;
+	}
+
+	/**
+	 * 获取排序内容
+	 * 例如 ascs->"id","user_name"
+	 * @param <T>
+	 */
+	protected <T> QueryWrapper<T> getSort(){
+
+		QueryWrapper<T> queryWrapper = new QueryWrapper<>();
+
+		String[] ascOrders = getParameterSafeValues(PageCons.PAGE_ASCS);
+		String[] descOrders = getParameterSafeValues(PageCons.PAGE_DESCS);
+
+		queryWrapper.orderByAsc(ascOrders);
+		queryWrapper.orderByDesc(descOrders);
+
+		return queryWrapper;
+	}
+
+	/**
+	 * 获取安全参数(SQL ORDER BY 过滤)
+	 *
+	 * @return columns
+	 */
+	protected String[] getParameterSafeValues(String type) {
+		String[] columns = AntiSQLFilter.getSafeValues(request.getParameterValues(type));
+		return columns;
 	}
 
 	/**
@@ -61,7 +82,6 @@ public class BaseController {
 	 * 成功返回
 	 *
 	 * @param object
-	 * @return
 	 */
 	public <T> ResponseResult<T> success(T object) {
 		return ResponseResult.<T>success(response, object);
@@ -70,7 +90,6 @@ public class BaseController {
 	/**
 	 * 成功返回
 	 *
-	 * @return
 	 */
 	public ResponseResult<Void> success() {
 		return success(HttpStatus.OK);
@@ -81,7 +100,6 @@ public class BaseController {
 	 *
 	 * @param status
 	 * @param object
-	 * @return
 	 */
 	public <T> ResponseResult<T> success(HttpStatus status, T object) {
 		return ResponseResult.<T>success(response, status, object);
@@ -92,7 +110,6 @@ public class BaseController {
 	 * 成功返回
 	 *
 	 * @param status
-	 * @return
 	 */
 	public ResponseResult<Void> success(HttpStatus status) {
 		return ResponseResult.<Void>success(response, status);

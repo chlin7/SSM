@@ -22,10 +22,7 @@ public class SysUserServiceImpl implements ISysUserService {
 	@Autowired
 	private ISysUserMapper sysUserMapper;
 
-	public IPage<SysUser> list(Page<SysUser> page){
-		QueryWrapper<SysUser> queryWrapper = new QueryWrapper<>();
-		queryWrapper.orderByDesc("id");
-
+	public IPage<SysUser> list(Page<SysUser> page,QueryWrapper<SysUser> queryWrapper){
 		return sysUserMapper.selectPage(page,queryWrapper);
 	}
 }
